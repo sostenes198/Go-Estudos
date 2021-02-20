@@ -1,0 +1,10 @@
+{
+  "Nome": "Soso",
+  "Idade": 20,
+  "Cursos": [
+    {
+      "Nome": "Engenharia",
+      "Finalizou": true
+    }
+  ]
+}
