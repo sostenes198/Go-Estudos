@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("Estruturas de controle")
+	fmt.Println("Estruturas de controle If / Else")
 
 	numero := 0
 
