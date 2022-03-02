@@ -1,7 +1,7 @@
 package entitity_test
 
 import (
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	. "implementacao/entitity"
 	"testing"
 )
@@ -11,11 +11,11 @@ func TestNewUser(t *testing.T) {
 	// assert
 
 	// act
-	user, err := NewUser("Ss", "ss@hotmail.com")
+	user, err := NewUser(Params{Name: "Ss", Email: "ss@hotmail.com"})
 
 	// assert
-	assert.NotNil(t, user)
-	assert.Nil(t, err)
+	require.NotNil(t, user)
+	require.Nil(t, err)
 }
 
 func TestReturnErrorWhenUserNotValid(t *testing.T) {
@@ -35,14 +35,12 @@ func TestReturnErrorWhenUserNotValid(t *testing.T) {
 
 		// act
 		for _, scenario := range scenarios {
-			user, err := NewUser(scenario.value.(string), "valid-email@gmail.com")
+			user, err := NewUser(Params{Name: scenario.value.(string), Email: "valid-email@gmail.com"})
 
 			// assert
-			assert.Nil(t, user)
-			if assert.NotNil(t, err) {
-				assert.Equal(t, scenario.expectedMessage, err.Error())
-			}
-
+			require.Nil(t, user)
+			require.NotNil(t, err)
+			require.Equal(t, scenario.expectedMessage, err.Error())
 		}
 	})
 
@@ -57,13 +55,12 @@ func TestReturnErrorWhenUserNotValid(t *testing.T) {
 
 		// act
 		for _, scenario := range scenarios {
-			user, err := NewUser("ValidName", scenario.value.(string))
+			user, err := NewUser(Params{Name: "ValidName", Email: scenario.value.(string)})
 
 			// assert
-			assert.Nil(t, user)
-			if assert.NotNil(t, err) {
-				assert.Equal(t, scenario.expectedMessage, err.Error())
-			}
+			require.Nil(t, user)
+			require.NotNil(t, err)
+			require.Equal(t, scenario.expectedMessage, err.Error())
 		}
 	})
 }

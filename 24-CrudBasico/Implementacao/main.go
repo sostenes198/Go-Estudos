@@ -2,23 +2,33 @@ package main
 
 import (
 	"fmt"
-	"implementacao/entitity"
+	"implementacao/repository/contracts"
+	"implementacao/repository/sql"
+	"implementacao/repository/sql/mysql"
+	"log"
 )
 
+var userRepository contracts.UserRepository
+
 func main() {
+	db := sql.Open()
+	defer db.Close()
+	userRepository = mysql.NewUserRepository(db)
 
-	x := &entitity.User{Name: "asadasd", Email: "asudhasduh"}
-	c := &entitity.User{Name: "asadasd", Email: "asudhasduh"}
+	afterUser, err := userRepository.Get(1)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(afterUser)
 
-	var a int
-	var b *int
+	//user, err := entitity.NewUser(entitity.Params{Id: 1, Name: "Batata", Email: "ASD@ASD.com"})
+	if err := userRepository.Delete(1); err != nil {
+		log.Fatal(err)
+	}
 
-	a = 10
-	b = &a
-
-	fmt.Println(&x)
-	fmt.Println(&c)
-
-	fmt.Println(a, &b)
-
+	beforeUser, err := userRepository.Get(1)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(beforeUser)
 }

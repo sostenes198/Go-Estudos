@@ -3,7 +3,7 @@ package models_test
 import (
 	"github.com/stretchr/testify/assert"
 	"implementacao/entitity"
-	. "implementacao/repository/mysql/models"
+	. "implementacao/repository/sql/mysql/models"
 	"testing"
 )
 

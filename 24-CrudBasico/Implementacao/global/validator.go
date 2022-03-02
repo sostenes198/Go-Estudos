@@ -5,21 +5,20 @@ import (
 	"sync"
 )
 
-type internalValidator struct {
-}
-
-func (v *internalValidator) Validate(input interface{}) error {
-	return playgroundValidator.Struct(input)
-}
-
 var once = sync.Once{}
-var playgroundValidator *validator.Validate
-var interValidator *internalValidator
+var interValidator *ValidatorGlobal
 
-func Validator() *internalValidator {
+type ValidatorGlobal struct {
+	validator *validator.Validate
+}
+
+func (v *ValidatorGlobal) Validate(input interface{}) error {
+	return v.validator.Struct(input)
+}
+
+func Validator() *ValidatorGlobal {
 	once.Do(func() {
-		interValidator = &internalValidator{}
-		playgroundValidator = validator.New()
+		interValidator = &ValidatorGlobal{validator: validator.New()}
 	})
 	return interValidator
 }
