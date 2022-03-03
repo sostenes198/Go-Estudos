@@ -5,4 +5,5 @@ const (
 	dbPassword = "DB_PASSWORD"
 	dbDatabase = "DB_DATABASE"
 	apiPort    = "API_PORT"
+	tokenSecretKey = "TOKEN_SECRET_KEY"
 )

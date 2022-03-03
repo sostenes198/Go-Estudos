@@ -11,6 +11,7 @@ import (
 var (
 	ConnectionStringDb = ""
 	Port               = 0
+	TokenSecretKey     []byte
 )
 
 // Load Inicializar as variáveis de ambiente
@@ -25,6 +26,8 @@ func Load() {
 	if err != nil {
 		Port = 9000
 	}
+
+	TokenSecretKey = []byte(os.Getenv(tokenSecretKey))
 
 	ConnectionStringDb = fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=true&loc=Local",
 		os.Getenv(dbUser),

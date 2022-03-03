@@ -63,7 +63,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var userViewModel view_models.CreateUser
+	var userViewModel view_models.UserCreateVw
 	if err = json.Unmarshal(bodyRequest, &userViewModel); err != nil {
 		responses.Erro(w, http.StatusBadRequest, err)
 		return
@@ -76,9 +76,14 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		Password: userViewModel.Password,
 		CreateAt: userViewModel.CreateAt,
 	})
-	errs := user.Validate()
+	errs := user.Validate(models.UserStepCreate)
 	if len(errs) > 0 {
 		responses.Erros(w, http.StatusBadRequest, errs)
+		return
+	}
+
+	if err := user.CryptPassword(); err != nil {
+		responses.Erro(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -93,10 +98,62 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 // Update Atualiza um usuário
 func Update(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Update"))
+	params := mux.Vars(r)
+
+	id, err := strconv.ParseUint(params["id"], 10, 64)
+	if err != nil {
+		responses.Erro(w, http.StatusBadRequest, err)
+	}
+
+	bodyRequest, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		responses.Erro(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	var userViewModel view_models.UserUpdateVw
+	if err = json.Unmarshal(bodyRequest, &userViewModel); err != nil {
+		responses.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	user := models.NewUser(models.ParamsUser{
+		Id:    id,
+		Name:  userViewModel.Name,
+		Nick:  userViewModel.Nick,
+		Email: userViewModel.Email,
+	})
+	errs := user.Validate(models.UserStepUpdate)
+	if len(errs) > 0 {
+		responses.Erros(w, http.StatusBadRequest, errs)
+		return
+	}
+
+	repository := repositories.NewUserRepository()
+
+	if repository.Update(user); err != nil {
+		responses.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, nil)
 }
 
 // Delete excluir um usuário
 func Delete(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Delete"))
+	params := mux.Vars(r)
+
+	id, err := strconv.ParseUint(params["id"], 10, 64)
+	if err != nil {
+		responses.Erro(w, http.StatusBadRequest, err)
+	}
+
+	repository := repositories.NewUserRepository()
+
+	if repository.Delete(id); err != nil {
+		responses.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, nil)
 }

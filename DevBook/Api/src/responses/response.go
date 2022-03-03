@@ -56,7 +56,9 @@ func Erro(w http.ResponseWriter, statusCode int, err error) {
 func Erros(w http.ResponseWriter, statusCode int, errs []error) {
 	var responseErros responseErros
 	for _, err := range errs {
-		responseErros = append(responseErros, responseErro{Message: err.Error()})
+		if err != nil {
+			responseErros = append(responseErros, responseErro{Message: err.Error()})
+		}
 	}
 
 	JSON(w, statusCode, responseErros)

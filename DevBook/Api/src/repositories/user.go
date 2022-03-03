@@ -58,6 +58,24 @@ func (repository *userRepository) GetById(id uint64) (*models.User, error) {
 	return &user, nil
 }
 
+func (repository *userRepository) GetUserToLogin(email string) (*models.User, error) {
+	var user models.User
+
+	row, err := repository.db.Query(queries.UserGetToEmailByEmail, email)
+	if err != nil {
+		return nil, err
+	}
+	defer row.Close()
+
+	if row.Next() {
+		if err := row.Scan(&user.Id, &user.Password); err != nil {
+			return nil, err
+		}
+	}
+
+	return &user, nil
+}
+
 func (repository *userRepository) Create(user *models.User) error {
 	statement, err := repository.db.Prepare(queries.UserCreate)
 	if err != nil {
@@ -76,5 +94,33 @@ func (repository *userRepository) Create(user *models.User) error {
 	}
 
 	user.Id = uint64(lastInsertId)
+	return nil
+}
+
+func (repository *userRepository) Update(user *models.User) error {
+	statement, err := repository.db.Prepare(queries.UserUpdate)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err := statement.Exec(user.Name, user.Nick, user.Email, user.Id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repository *userRepository) Delete(id uint64) error {
+	statement, err := repository.db.Prepare(queries.UserDelete)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err := statement.Exec(id); err != nil {
+		return err
+	}
+
 	return nil
 }

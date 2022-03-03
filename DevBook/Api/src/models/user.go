@@ -1,9 +1,16 @@
 package models
 
 import (
+	"devbook/src/security"
 	"errors"
+	"github.com/badoux/checkmail"
 	"strings"
 	"time"
+)
+
+const (
+	UserStepCreate = "Create"
+	UserStepUpdate = "Update"
 )
 
 type User struct {
@@ -39,7 +46,7 @@ func NewUser(params ParamsUser) *User {
 }
 
 // Validate valida se é um usuário válido
-func (user *User) Validate() []error {
+func (user *User) Validate(step string) []error {
 	var errs []error
 	if user.Name == "" {
 		errs = append(errs, errors.New("Nome do usuário não pode ser nullo ou vazio."))
@@ -50,7 +57,12 @@ func (user *User) Validate() []error {
 	if user.Email == "" {
 		errs = append(errs, errors.New("Email do usuário não pode ser nullo ou vazio."))
 	}
-	if user.Password == "" {
+
+	if err := checkmail.ValidateFormat(user.Email); err != nil {
+		errs = append(errs, errors.New("Email do usuário é inválido."))
+	}
+
+	if step == UserStepCreate && user.Password == "" {
 		errs = append(errs, errors.New("Password do usuário não pode ser nullo ou vazio."))
 	}
 
@@ -65,4 +77,14 @@ func (user *User) format() {
 	user.Name = strings.TrimSpace(user.Name)
 	user.Nick = strings.TrimSpace(user.Nick)
 	user.Email = strings.TrimSpace(user.Email)
+}
+
+func (user *User) CryptPassword() error {
+	hashPassword, err := security.Hash(user.Password)
+	if err != nil {
+		return err
+	}
+	user.Password = string(hashPassword)
+
+	return nil
 }
