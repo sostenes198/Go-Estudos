@@ -6,6 +6,7 @@ import (
 	"fmt"
 	jwt "github.com/dgrijalva/jwt-go"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -31,6 +32,25 @@ func ValidateToken(r *http.Request) error {
 	}
 
 	return errors.New("invalid token")
+}
+
+func ExtractUserIdFromToken(r *http.Request) (uint64, error) {
+	tokenString := extractToken(r)
+	token, err := jwt.Parse(tokenString, returnKeyValidation)
+	if err != nil {
+		return 0, err
+	}
+
+	if permissions, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		userId, err := strconv.ParseUint(fmt.Sprintf("%.of", permissions["userId"]), 10, 64)
+		if err != nil{
+			return 0, err
+		}
+
+		return userId, err
+	}
+
+	return 0, errors.New("Token inválido")
 }
 
 func extractToken(r *http.Request) string {

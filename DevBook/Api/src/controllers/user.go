@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"devbook/src/authentication"
 	"devbook/src/controllers/view_models"
 	"devbook/src/models"
 	"devbook/src/repositories"
@@ -105,7 +106,18 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		responses.Erro(w, http.StatusBadRequest, err)
 	}
 
-	bodyRequest, err := ioutil.ReadAll(r.Body)
+	userTokenId, err := authentication.ExtractUserIdFromToken(r)
+	if err != nil{
+		responses.Erro(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	if userTokenId != id {
+		responses.Erro(w, http.StatusForbidden, nil)
+		return
+	}
+
+		bodyRequest, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		responses.Erro(w, http.StatusUnprocessableEntity, err)
 		return
@@ -146,6 +158,16 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseUint(params["id"], 10, 64)
 	if err != nil {
 		responses.Erro(w, http.StatusBadRequest, err)
+	}
+
+	userTokenId, err := authentication.ExtractUserIdFromToken(r)
+	if err != nil{
+		responses.Erro(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	if userTokenId != id {
+		responses.Erro(w, http.StatusForbidden, nil)
+		return
 	}
 
 	repository := repositories.NewUserRepository()
