@@ -22,6 +22,11 @@ type circulo struct {
 	raio float64
 }
 
+type todasFormas interface {
+	forma
+	newForma() float64
+}
+
 func (c circulo) area() float64 {
 	return math.Pi * math.Pow(c.raio, 2)
 }

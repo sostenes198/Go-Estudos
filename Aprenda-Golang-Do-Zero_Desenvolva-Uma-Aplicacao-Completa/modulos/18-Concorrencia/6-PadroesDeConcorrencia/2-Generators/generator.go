@@ -10,6 +10,9 @@ func main() {
 
 	canal := escrever("Olá mundo")
 
+	mensagem := <-canal
+	fmt.Println(mensagem)
+
 	for i := 0; i < 10; i++ {
 		fmt.Println(<-canal)
 	}

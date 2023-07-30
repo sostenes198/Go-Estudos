@@ -39,4 +39,11 @@ func main() {
 	fmt.Println(slice3)
 	fmt.Println(len(slice3))
 	fmt.Println(cap(slice3))
+
+	var ponteiro = &slice1[0]
+	var valor = *ponteiro
+	println(&slice3[0])
+	println(*ponteiro)
+	println(ponteiro)
+	println(valor)
 }

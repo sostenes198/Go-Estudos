@@ -8,6 +8,8 @@ OBS: Um módulo é um conjunto de arquivos dentro de uma pasta, ou seja, para ca
 
 `go build` builda o projeto e gera o executável
 
+`go install` builda o projeto e gera o executável e salva na raiz onde foi instalado o GO
+
 `go get {NOME_PACOTE}` Obtém um pacote para o projeto exemplo: `go get github.com/badoux/checkmail`
 
 `go get {NOME_PACOTE}@none` Remove pacote específico
@@ -36,10 +38,11 @@ OBS: O Go faz cache dos testes e quando não há alteração no teste nem no mé
 
 # Testar pacote local 
 
-![testar_pacote_local](Imagens/testar_pacote_local.png)
-
 
 # Links Úteis
+
+## Gerenciando instalções do GOLANG
+[https://go.dev/doc/manage-install](https://go.dev/doc/manage-install)
 
 ## Gerenciado dependências GO:
 [https://go.dev/doc/modules/managing-dependencies](https://go.dev/doc/modules/managing-dependencies)

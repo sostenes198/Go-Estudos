@@ -6,6 +6,11 @@ import (
 )
 
 func main() {
+
+	// canal <- {VALOR} = Envia dados para o canal
+	// <- canal (esperando o canal receber o valor
+	// mensagem := <- canal (Espera receber o valor do canal e armazena na variável mensagem
+
 	fmt.Println("Go Routines Canais")
 
 	canal := make(chan string)

@@ -16,6 +16,9 @@ type endereco struct {
 func main() {
 	fmt.Println("Structs")
 
+	var u usuario
+	fmt.Println(u)
+
 	soso := usuario{"Sóstenes", 26, endereco{"rua dos bobos", 0}}
 	fmt.Println(soso)
 

@@ -1,6 +1,7 @@
 package entitity_test
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/require"
 	"implementacao/entitity"
 	"testing"
@@ -63,4 +64,27 @@ func TestReturnErrorWhenUserNotValid(t *testing.T) {
 			require.Equal(t, scenario.expectedMessage, err.Error())
 		}
 	})
+}
+
+func TestTypeValues(t *testing.T) {
+	var user entitity.User
+	fmt.Println(user)
+
+	var a []entitity.User
+	fmt.Println(a)
+
+	var b = new([]entitity.User)
+	fmt.Println(b)
+
+	var c = make([]entitity.User, 0)
+	fmt.Println(c)
+
+	var d = make([]entitity.User, 1)
+	fmt.Println(d)
+
+	var e *entitity.User
+	fmt.Println(e)
+
+	var f = new(entitity.User)
+	fmt.Println(f)
 }

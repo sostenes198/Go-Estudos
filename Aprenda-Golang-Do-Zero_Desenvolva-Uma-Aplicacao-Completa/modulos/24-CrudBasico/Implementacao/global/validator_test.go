@@ -36,6 +36,7 @@ func TestValidator(t *testing.T) {
 	waitGroup.Wait()
 
 	// assert
+
 	require.Equal(t, internalValidator1, internalValidator2)
 	require.Equal(t, internalValidator1, internalValidator3)
 	require.Equal(t, internalValidator2, internalValidator3)

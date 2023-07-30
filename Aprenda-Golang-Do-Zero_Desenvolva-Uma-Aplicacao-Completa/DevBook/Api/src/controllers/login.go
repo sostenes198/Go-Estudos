@@ -7,12 +7,12 @@ import (
 	"devbook/src/responses"
 	"devbook/src/security"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	bodyRequest, err := ioutil.ReadAll(r.Body)
+	bodyRequest, err := io.ReadAll(r.Body)
 	if err != nil {
 		responses.Erro(w, http.StatusUnprocessableEntity, err)
 		return
@@ -26,18 +26,18 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	repository := repositories.NewUserRepository()
 	user, err := repository.GetUserToLogin(loginViewModel.Email)
-	if err != nil{
+	if err != nil {
 		responses.Erro(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	if err := security.ValidatePassword(user.Password, loginViewModel.Password); err != nil{
+	if err := security.ValidatePassword(user.Password, loginViewModel.Password); err != nil {
 		responses.Erro(w, http.StatusUnauthorized, nil)
 		return
 	}
 
 	token, err := authentication.CreateToken(user.Id)
-	if err != nil{
+	if err != nil {
 		responses.Erro(w, http.StatusInternalServerError, err)
 		return
 	}

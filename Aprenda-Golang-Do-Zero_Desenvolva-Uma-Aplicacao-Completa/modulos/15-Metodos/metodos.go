@@ -15,6 +15,10 @@ func (u *usuario) fazerAniversario() {
 	u.idade++
 }
 
+func (u usuario) fazerAniversario2() {
+	u.idade++
+}
+
 func main() {
 	fmt.Println("Métodos")
 
@@ -26,4 +30,8 @@ func main() {
 	usuario3 := usuario{"Usuário 3", 20}
 	usuario3.fazerAniversario()
 	fmt.Println(usuario3.idade)
+
+	usuario4 := usuario{"Usuário 4", 15}
+	usuario4.fazerAniversario2()
+	fmt.Println(usuario4.idade)
 }
