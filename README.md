@@ -52,3 +52,8 @@ OBS: O Go faz cache dos testes e quando não há alteração no teste nem no mé
 
 ## Reflexão GO:
 [https://go.dev/blog/laws-of-reflection](https://go.dev/blog/laws-of-reflection)
+
+## Contexto GO:
+[https://pkg.go.dev/context](https://pkg.go.dev/context)
+
+[https://andreleoni.medium.com/aprendendo-context-e-golang-de-forma-pragm%C3%A1tica-91bc3287cdf7](https://andreleoni.medium.com/aprendendo-context-e-golang-de-forma-pragm%C3%A1tica-91bc3287cdf7)

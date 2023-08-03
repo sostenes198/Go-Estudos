@@ -12,7 +12,7 @@ var userRepository contracts.UserRepository
 
 func main() {
 	db := sql.Open()
-	defer db.Close()
+	defer sql.Close()
 	userRepository = mysql.NewUserRepository(db)
 
 	afterUser, err := userRepository.Get(1)
