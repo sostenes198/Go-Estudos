@@ -8,6 +8,7 @@ type SqlConnectionConfig interface {
 type SqlDatabaseType string
 
 const (
-	MySql    SqlDatabaseType = "mysql"
-	Postgres SqlDatabaseType = "postgres"
+	TypeMySql    SqlDatabaseType = "mysql"
+	TypePostgres SqlDatabaseType = "postgres"
+	TypeSqlMock  SqlDatabaseType = "sqlmock"
 )

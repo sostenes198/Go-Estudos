@@ -2,7 +2,7 @@ package pkg_sql_connections_config
 
 import "fmt"
 
-type SqlConnectionConfigPostgres struct {
+type sqlConnectionConfigPostgres struct {
 	host         string
 	port         int
 	user         string
@@ -11,14 +11,14 @@ type SqlConnectionConfigPostgres struct {
 }
 
 func NewSqlConnectionConfig(host string, port int, user string, password string, databaseName string) SqlConnectionConfig {
-	return SqlConnectionConfigPostgres{host: host, port: port, user: user, password: password, databaseName: databaseName}
+	return sqlConnectionConfigPostgres{host: host, port: port, user: user, password: password, databaseName: databaseName}
 }
 
-func (sql SqlConnectionConfigPostgres) GetDatabaseType() SqlDatabaseType {
-	return Postgres
+func (sql sqlConnectionConfigPostgres) GetDatabaseType() SqlDatabaseType {
+	return TypePostgres
 }
 
-func (sql SqlConnectionConfigPostgres) GetConnectionString() (string, error) {
+func (sql sqlConnectionConfigPostgres) GetConnectionString() (string, error) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", sql.host, sql.port, sql.user, sql.password, sql.databaseName)
 	return psqlInfo, nil
 }

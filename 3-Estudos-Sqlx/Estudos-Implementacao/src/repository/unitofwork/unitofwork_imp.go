@@ -8,10 +8,10 @@ import (
 )
 
 type unitOfWorkImp struct {
-	sqlService *pkgsql.SqlService
+	sqlService pkgsql.SqlService
 }
 
-func NewUnitOfWork(sqlService *pkgsql.SqlService) UnitOfWork {
+func NewUnitOfWork(sqlService pkgsql.SqlService) UnitOfWork {
 	return unitOfWorkImp{sqlService: sqlService}
 }
 

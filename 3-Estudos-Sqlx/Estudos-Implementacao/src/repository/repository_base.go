@@ -2,20 +2,18 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"github.com/jmoiron/sqlx"
 )
 
-func ExecQuery[TParam interface{}](query string, param TParam, db *sqlx.DB, ctx *context.Context, tx *sqlx.Tx) error {
+func ExecQuery[TParam interface{}](query string, param TParam, db *sqlx.DB, ctx *context.Context, tx *sqlx.Tx) (sqlResult sql.Result, err error) {
 	if tx != nil {
-		_, err := tx.NamedExecContext(*ctx, query, param)
-		return err
+		result, err := tx.NamedExecContext(*ctx, query, param)
+		return result, err
 	}
 
-	if _, err := db.NamedExecContext(*ctx, query, param); err != nil {
-		return err
-	}
-
-	return nil
+	result, err := db.NamedExecContext(*ctx, query, param)
+	return result, err
 }
 
 func GetExecQuery[TParam map[string]interface{}, TModelDest interface{}](query string, param TParam, dest *TModelDest, db *sqlx.DB, ctx *context.Context, tx *sqlx.Tx) error {

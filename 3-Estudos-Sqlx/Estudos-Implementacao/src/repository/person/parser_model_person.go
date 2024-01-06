@@ -8,14 +8,14 @@ import (
 type parseModelPerson struct {
 }
 
-func NewParserModelPerson() repository.ParserModel[domainperson.Person, personModel] {
+func NewParserModelPerson() repository.ParserModel[domainperson.Person, PersonModel] {
 	return parseModelPerson{}
 }
 
-func (p parseModelPerson) ParseToModel(entity domainperson.Person) personModel {
-	return newPersonModel(entity.FirstName, entity.LastName, entity.Email)
+func (p parseModelPerson) ParseToModel(entity domainperson.Person) PersonModel {
+	return NewPersonModel(entity.FirstName, entity.LastName, entity.Email)
 }
 
-func (p parseModelPerson) ParseToEntity(model personModel) domainperson.Person {
+func (p parseModelPerson) ParseToEntity(model PersonModel) domainperson.Person {
 	return domainperson.NewPerson(model.FirstName, model.LastName, model.Email)
 }

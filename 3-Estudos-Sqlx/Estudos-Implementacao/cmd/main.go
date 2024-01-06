@@ -36,12 +36,12 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer func(sqlService *pkg_sql.SqlService) {
+	defer func(sqlService pkg_sql.SqlService) {
 		err := sqlService.CloseConnection()
 		if err != nil {
 			log.Fatalln(err)
 		}
-	}(&sqlService)
+	}(sqlService)
 
 	db, err := sqlService.GetDb()
 	if err != nil {
@@ -50,8 +50,9 @@ func main() {
 	db.MustExec(schema)
 
 	ctx := context.TODO()
-	unitOfWork := repositoryUnitOfWork.NewUnitOfWork(&sqlService)
-	personRepository := repositoryPerson.NewRepositoryPerson(&sqlService)
+	unitOfWork := repositoryUnitOfWork.NewUnitOfWork(sqlService)
+	parserPerson := repositoryPerson.NewParserModelPerson()
+	personRepository := repositoryPerson.NewRepositoryPerson(sqlService, parserPerson)
 	_ = personRepository.Create(domainPerson.NewPerson("P1", "L1", "P1@P1.com"), &ctx, nil)
 	_ = personRepository.Create(domainPerson.NewPerson("P2", "L2", "P2@P2.com"), &ctx, nil)
 	_ = personRepository.Create(domainPerson.NewPerson("P3", "L3", "P3@P3.com"), &ctx, nil)

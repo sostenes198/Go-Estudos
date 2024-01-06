@@ -8,32 +8,31 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-var _parser = NewParserModelPerson()
-
-type repositoryPersonImp struct {
-	sqlService *pkgSql.SqlService
+type RepositoryPersonImp struct {
+	sqlService pkgSql.SqlService
+	parser     repository.ParserModel[domainperson.Person, PersonModel]
 }
 
-func NewRepositoryPerson(sqlService *pkgSql.SqlService) RepositoryPerson {
-	return repositoryPersonImp{sqlService: sqlService}
+func NewRepositoryPerson(sqlService pkgSql.SqlService, parser repository.ParserModel[domainperson.Person, PersonModel]) RepositoryPerson {
+	return RepositoryPersonImp{sqlService: sqlService, parser: parser}
 }
 
-func (repo repositoryPersonImp) Create(person domainperson.Person, ctx *context.Context, tx *sqlx.Tx) error {
+func (repo RepositoryPersonImp) Create(person domainperson.Person, ctx *context.Context, tx *sqlx.Tx) error {
 	db, err := repo.sqlService.GetDb()
 	if err != nil {
 		return err
 	}
 
-	model := _parser.ParseToModel(person)
+	model := repo.parser.ParseToModel(person)
 
-	if err = repository.ExecQuery(createPersonQuery, model, db, ctx, tx); err != nil {
+	if _, err = repository.ExecQuery(createPersonQuery, model, db, ctx, tx); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (repo repositoryPersonImp) Update(person domainperson.Person, ctx *context.Context, tx *sqlx.Tx) error {
+func (repo RepositoryPersonImp) Update(person domainperson.Person, ctx *context.Context, tx *sqlx.Tx) error {
 	var err error = nil
 
 	db, err := repo.sqlService.GetDb()
@@ -41,16 +40,16 @@ func (repo repositoryPersonImp) Update(person domainperson.Person, ctx *context.
 		return err
 	}
 
-	model := _parser.ParseToModel(person)
+	model := repo.parser.ParseToModel(person)
 
-	if err = repository.ExecQuery(updatePersonQuery, model, db, ctx, tx); err != nil {
+	if _, err = repository.ExecQuery(updatePersonQuery, model, db, ctx, tx); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (repo repositoryPersonImp) DeleteByEmail(email string, ctx *context.Context, tx *sqlx.Tx) error {
+func (repo RepositoryPersonImp) DeleteByEmail(email string, ctx *context.Context, tx *sqlx.Tx) error {
 	var err error = nil
 
 	db, err := repo.sqlService.GetDb()
@@ -62,14 +61,14 @@ func (repo repositoryPersonImp) DeleteByEmail(email string, ctx *context.Context
 		"email": email,
 	}
 
-	if err = repository.ExecQuery(deletePersonByEmailQuery, param, db, ctx, tx); err != nil {
+	if _, err = repository.ExecQuery(deletePersonByEmailQuery, param, db, ctx, tx); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (repo repositoryPersonImp) GetFirstOrDefaultByLastName(lastname string, ctx *context.Context, tx *sqlx.Tx) (domainperson.Person, error) {
+func (repo RepositoryPersonImp) GetFirstOrDefaultByLastName(lastname string, ctx *context.Context, tx *sqlx.Tx) (domainperson.Person, error) {
 	var err error = nil
 
 	db, err := repo.sqlService.GetDb()
@@ -77,7 +76,7 @@ func (repo repositoryPersonImp) GetFirstOrDefaultByLastName(lastname string, ctx
 		return domainperson.EmptyPerson(), err
 	}
 
-	model := personModel{}
+	model := PersonModel{}
 	param := map[string]interface{}{
 		"last_name": lastname,
 	}
@@ -86,10 +85,10 @@ func (repo repositoryPersonImp) GetFirstOrDefaultByLastName(lastname string, ctx
 		return domainperson.EmptyPerson(), err
 	}
 
-	return _parser.ParseToEntity(model), nil
+	return repo.parser.ParseToEntity(model), nil
 }
 
-func (repo repositoryPersonImp) ListByLastName(lastname string, ctx *context.Context, tx *sqlx.Tx) ([]domainperson.Person, error) {
+func (repo RepositoryPersonImp) ListByLastName(lastname string, ctx *context.Context, tx *sqlx.Tx) ([]domainperson.Person, error) {
 	var err error = nil
 	emptyPersons := make([]domainperson.Person, 0)
 
@@ -98,7 +97,7 @@ func (repo repositoryPersonImp) ListByLastName(lastname string, ctx *context.Con
 		return emptyPersons, err
 	}
 
-	var models []personModel
+	var models []PersonModel
 	param := map[string]interface{}{
 		"last_name": lastname,
 	}
@@ -108,13 +107,13 @@ func (repo repositoryPersonImp) ListByLastName(lastname string, ctx *context.Con
 		return nil, err
 	}
 
-	return _parseModelsTOEntities(models), nil
+	return _parseModelsTOEntities(repo.parser, models), nil
 }
 
-func _parseModelsTOEntities(models []personModel) []domainperson.Person {
+func _parseModelsTOEntities(parser repository.ParserModel[domainperson.Person, PersonModel], models []PersonModel) []domainperson.Person {
 	var persons []domainperson.Person
 	for _, model := range models {
-		persons = append(persons, _parser.ParseToEntity(model))
+		persons = append(persons, parser.ParseToEntity(model))
 	}
 	return persons
 }
