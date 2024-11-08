@@ -20,6 +20,24 @@ OBS: Um módulo é um conjunto de arquivos dentro de uma pasta, ou seja, para ca
 
 `go mod tidy` remove todos os pacotes que não estão sendo mais utilizados.
 
+`go mod edit -replace soso.estudos.com/greetings=../greetings`: O comando especifica que example.com/greetings deve ser substituído por ../greetings para o propósito de localizar a dependência. Após executar o comando, o arquivo go.mod no diretório hello deve incluir uma diretiva replace.
+
+`go work`: O comando go work init informa ao go para criar um arquivo go.work para um espaço de trabalho contendo os módulos no diretório ./hello.
+
+---
+`go clean` Limpar os pacotes instalados.
+
+**outras formas de executar o comando de limpeza**:
+
+`rm -rf $(go env GOPATH)/pkg/mod`: Remover todos os módulos e pacotes baixados.
+
+`rm -rf $(go env GOCACHE)`: Remover o cache de build (opcional).
+
+`rm -rf $(go env GOPATH)/bin`: Remover binários instalados.
+
+---
+
+
 `go test` executa os testes do pacote que esta no path do terminal
 
 `go test ./...` Executa todos os pacotes dentro de todas as paths com base no path do terminal
@@ -43,6 +61,11 @@ OBS: O Go faz cache dos testes e quando não há alteração no teste nem no mé
 
 ## Gerenciando instalções do GOLANG
 [https://go.dev/doc/manage-install](https://go.dev/doc/manage-install)
+
+## Gerenciamento de módulos do GOLAN
+[https://go.dev/doc/tutorial/create-module](https://go.dev/doc/tutorial/create-module) 
+
+[https://go.dev/doc/tutorial/workspaces](https://go.dev/doc/tutorial/workspaces)
 
 ## Gerenciado dependências GO:
 [https://go.dev/doc/modules/managing-dependencies](https://go.dev/doc/modules/managing-dependencies)
